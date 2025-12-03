@@ -41,22 +41,38 @@ const today = new Date();
 </footer>
 <style>
 	footer {
-		padding: 2em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		color: rgb(var(--gray));
+		padding: 2em 1em;
+		margin-top: 3em;
 		text-align: center;
-	}
-	.social-links {
-		display: flex;
-		justify-content: center;
-		gap: 1em;
-		margin-top: 1em;
-	}
-	.social-links a {
-		text-decoration: none;
+		font-size: 0.85em;
+        /* Aseguramos que no tenga fondo oscuro */
+        background-color: transparent; 
 		color: rgb(var(--gray));
+		border-top: 1px solid rgb(var(--gray-light)); /* Línea divisoria suave */
+	}
+	
+    /* Estilo para el texto de copyright */
+    footer p {
+        color: rgb(var(--black)); /* Texto oscuro legible */
+        margin-bottom: 1em;
+    }
+
+	.social-links {
+		margin-top: 1em;
+		display: flex;
+		gap: 1em;
+		justify-content: center;
+		/* Aseguramos que el contenedor de iconos no tenga fondo oscuro */
+        background-color: transparent; 
+	}
+	
+    /* Estilo para los iconos sociales */
+	.social-links a {
+		color: rgb(var(--gray));
+		transition: color 0.3s;
 	}
 	.social-links a:hover {
-		color: rgb(var(--gray-dark));
+		color: rgb(var(--black)); /* Icono oscuro al pasar el ratón */
 	}
 </style>
+

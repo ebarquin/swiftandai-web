@@ -1,0 +1,74 @@
+---
+// src/components/BlogPost.astro
+
+// Este componente recibe las propiedades del post
+const { url, title, pubDate, description } = Astro.props;
+
+// Formateo de fecha robusto en español
+const formattedDate = pubDate.toLocaleDateString('es-ES', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+});
+---
+
+<a href={url} class="blog-post-card">
+    <article>
+        <div class="post-header">
+            <h3>{title}</h3>
+            <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        </div>
+        <p class="post-description">{description}</p>
+    </article>
+</a>
+
+<style>
+    /* Importamos variables para consistencia con global.css */
+    :root {
+        --black: 28, 28, 30; 
+        --gray: 142, 142, 147;
+        --gray-light: 239, 239, 244; 
+    }
+    
+    .blog-post-card {
+        display: block;
+        text-decoration: none;
+        background: white;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+        color: inherit;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03); /* Sombra suave */
+    }
+
+    .blog-post-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); 
+    }
+
+    .post-header h3 {
+        color: rgb(var(--black));
+        font-size: 1.25em;
+        margin-bottom: 0.5rem;
+    }
+
+    .post-header time {
+        color: rgb(var(--gray));
+        font-size: 0.9em;
+        display: block;
+        margin-bottom: 0.75rem;
+    }
+
+    .post-description {
+        color: #4a4a4a;
+        line-height: 1.4;
+        margin: 0;
+        /* Limita la descripción a 3 líneas */
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+</style>

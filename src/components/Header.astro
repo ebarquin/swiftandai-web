@@ -1,15 +1,16 @@
 ---
 import { SITE_TITLE } from '../consts';
-import HeaderLink from './HeaderLink.astro';
+
+// Eliminamos: import HeaderLink from './HeaderLink.astro';
 ---
 
 <header>
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
+			<a href="/" class="active">Home</a>
+			<a href="/blog">Blog</a>
+			<a href="/about">About</a>
 		</div>
 		<div class="social-links">
 			<a href="https://m.webtoo.ls/@astro" target="_blank">
@@ -44,42 +45,58 @@ import HeaderLink from './HeaderLink.astro';
 </header>
 <style>
 	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
-
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
-	}
-	nav {
+		/* SOLO LAYOUT */
+		margin: 0.5em 0 1.5em 0; 
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		padding: 0 1em;
+		background-color: transparent !important; 
+        border-bottom: none !important;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+	h2 {
+		margin: 0;
+		font-size: 1.1em;
+	}
+	h2 a {
 		text-decoration: none;
+        font-weight: 700;
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
-	}
-	.social-links,
-	.social-links a {
+	.social-links {
 		display: flex;
+		gap: 0.5em;
 	}
-	@media (max-width: 720px) {
-		.social-links {
-			display: none;
-		}
-	}
+
+    /* ESTILOS DE ENLACE DENTRO DE ESTE HEADER */
+    .internal-links a {
+        padding: 0.5em 0.5em;
+		color: rgb(var(--black)) !important; /* Texto Oscuro */
+		text-decoration: none;
+        transition: color 0.3s;
+    }
+    
+    .internal-links a:hover {
+        color: var(--accent) !important; /* Azul Apple */
+    }
+
+	/* Estilo para el enlace de la página actual (ACTIVE) */
+	.internal-links a.active {
+        color: var(--accent) !important; /* FUERZA el color AZUL */
+        font-weight: 600;
+        border-bottom: 2px solid var(--accent) !important; 
+        padding-bottom: 0.25em; 
+    }
+    
+    /* Estilo para iconos sociales */
+    .social-links a,
+    .social-links svg { 
+        color: rgb(var(--black)) !important;
+        fill: rgb(var(--black)) !important;
+    }
+    
+    .social-links a:hover,
+    .social-links a:hover svg { 
+        color: var(--accent) !important;
+        fill: var(--accent) !important;
+    }
 </style>
