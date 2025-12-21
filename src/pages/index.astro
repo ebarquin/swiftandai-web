@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// 1. Buscamos todos los archivos Markdown en la carpeta blog
+const posts = await Astro.glob('./blog/*.md');
+
+// 2. Opcional: Los ordenamos por fecha (del más reciente al más antiguo)
+const sortedPosts = posts.sort((a, b) => 
+	new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()
+);
+---
+
+<Layout title="Inicio">
+	<header class="mb-12">
+		<h1 class="text-4xl font-extrabold tracking-tight mb-4 text-gray-900">Swift & AI</h1>
+		<p class="text-lg text-gray-500 leading-relaxed">
+			Documentación técnica sobre modelos locales y desarrollo nativo.
+		</p>
+	</header>
+	
+	<section class="space-y-10">
+		<h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 border-b border-gray-100 pb-2">
+			Publicaciones recientes
+		</h2>
+		
+		{sortedPosts.map(post => (
+			<article class="group relative flex flex-col items-start">
+				<time class="text-sm text-gray-400 font-mono mb-2">
+					{post.frontmatter.date}
+				</time>
+				<h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">
+					<a href={post.url}>
+						<span class="absolute -inset-y-2.5 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span>
+						<span class="relative z-10">{post.frontmatter.title}</span>
+					</a>
+				</h3>
+				<p class="relative z-10 mt-2 text-sm text-gray-600 leading-relaxed">
+					{post.frontmatter.description}
+				</p>
+				<div class="relative z-10 mt-4 flex items-center text-sm font-medium text-primary uppercase tracking-tight">
+					Leer artículo
+					<svg class="ml-1 h-3 w-3 stroke-current" fill="none" viewBox="0 0 10 10">
+						<path d="M0 5h7M4 1l4 4-4 4"></path>
+					</svg>
+				</div>
+			</article>
+		))}
+	</section>
+</Layout>
