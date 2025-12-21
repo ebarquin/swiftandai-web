@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
+    darkMode: 'class',    
 	theme: {
 		extend: {
 			fontFamily: {
@@ -8,7 +9,7 @@ export default {
 				mono: ['"SF Mono"', 'Monaco', 'Menlo', 'monospace'],
 			},
 			colors: {
-				primary: '#007aff', 
+				primary: '#0071e3', 
 			}
 		},
 	},
