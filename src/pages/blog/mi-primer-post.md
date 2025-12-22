@@ -1,8 +1,10 @@
 ---
-layout: ../../layouts/Layout.astro
+layout: ../../layouts/PostLayout.astro
 title: "IA Local: El fin de la latencia en Swift"
 date: "2025-01-01"
 description: "Por qué ejecutar modelos en el dispositivo es el futuro del desarrollo nativo."
+image: /images/posts/ia-local.png
+imageAlt: Diagrama del pipeline de inferencia local con Core ML
 ---
 
 # El cambio de paradigma
@@ -19,4 +21,4 @@ Como desarrolladores de **Swift**, estamos acostumbrados a la eficiencia. Sin em
 Para cargar un modelo en Core ML, simplemente inicializamos:
 
 ```swift
-let model = try MyLocalModel(configuration: .init())
+let model = try MyLocalModel(configuration: .init())</swift>

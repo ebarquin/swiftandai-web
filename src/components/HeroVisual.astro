@@ -1,0 +1,41 @@
+---
+// HeroVisual.astro
+// Visual técnico y sobrio para la home. No depende de datos ni props.
+---
+
+<div class="relative rounded-[2.5rem] border border-gray-100 dark:border-gray-800 bg-white/60 dark:bg-[#1d1d1f]/40 backdrop-blur-xl p-8 shadow-sm">
+  <div class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-primary/10 via-transparent to-transparent"></div>
+
+  <svg
+    class="relative w-full h-auto text-gray-900 dark:text-gray-100"
+    viewBox="0 0 360 240"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <rect x="46" y="34" width="268" height="172" rx="28" stroke="currentColor" stroke-opacity="0.12" stroke-width="2"/>
+    <rect x="92" y="72" width="176" height="96" rx="20" stroke="currentColor" stroke-opacity="0.14" stroke-width="2"/>
+
+    <path d="M76 120H92M268 120H284" stroke="currentColor" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
+    <path d="M180 48V72M180 168V192" stroke="currentColor" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
+
+    <circle cx="76" cy="120" r="6" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="284" cy="120" r="6" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="180" cy="48" r="6" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="180" cy="192" r="6" fill="currentColor" fill-opacity="0.18"/>
+
+    <path d="M132 96H228M132 120H228M132 144H208" stroke="currentColor" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="132" cy="96" r="4" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="228" cy="96" r="4" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="132" cy="120" r="4" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="228" cy="120" r="4" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="132" cy="144" r="4" fill="currentColor" fill-opacity="0.18"/>
+    <circle cx="208" cy="144" r="4" fill="currentColor" fill-opacity="0.18"/>
+
+    <path d="M92 72L76 120M268 72L284 120M92 168L76 120M268 168L284 120" stroke="currentColor" stroke-opacity="0.10" stroke-width="2"/>
+  </svg>
+
+  <p class="relative mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
+    On-device · Core ML · Arquitectura
+  </p>
+</div>
