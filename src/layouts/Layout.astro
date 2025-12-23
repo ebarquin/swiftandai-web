@@ -22,11 +22,13 @@ const { title } = Astro.props;
         <link rel="manifest" href="/site.webmanifest" />
         
         <title>{title} | Swift & AI</title>
-        <script
-          defer
-          src="https://umami-production-9af2.up.railway.app/script.js"
-          data-website-id="55b4425f-b455-49ef-b89f-7696d646ab0e">
-        </script>
+        {import.meta.env.PROD && (
+          <script
+            defer
+            src="https://umami-production-9af2.up.railway.app/script.js"
+            data-website-id="55b4425f-b455-49ef-b89f-7696d646ab0e">
+          </script>
+        )}
         
         <script is:inline>
             const theme = (() => {
