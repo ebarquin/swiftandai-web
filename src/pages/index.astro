@@ -38,14 +38,14 @@ const archivePosts = sortedPosts.slice(5);
             <div class="grid gap-16">
                 {featuredPosts.map(post => (
                     <a href={post.url} class="group block no-underline text-inherit">
-                        <div class="bg-white dark:bg-[#2c2c2e] border border-gray-100 dark:border-gray-800 p-8 rounded-[2.5rem] shadow-sm group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-500 grid md:grid-cols-2 gap-10 items-center">
+                        <div class="bg-white dark:bg-[#2c2c2e] border border-gray-100 dark:border-gray-800 p-8 rounded-card shadow-sm group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-500 grid md:grid-cols-2 gap-10 items-center">
                             {post.frontmatter.image && (
                                 <img
                                     src={post.frontmatter.image}
                                     alt={post.frontmatter.imageAlt || post.frontmatter.title}
                                     width="1536"
                                     height="1024"
-                                    class="w-full max-h-[220px] object-contain bg-gray-50 dark:bg-[#1c1c1e] rounded-[1.5rem] border border-gray-100 dark:border-gray-800"
+                                    class="w-full max-h-[220px] object-contain bg-gray-50 dark:bg-[#1c1c1e] rounded-card-inner border border-gray-100 dark:border-gray-800"
                                 />
                             )}
                             <div>
