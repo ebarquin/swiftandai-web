@@ -5,7 +5,7 @@ const { title, frontmatter } = Astro.props;
 const { image, imageAlt, description } = frontmatter ?? {};
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description} image={image}>
   <article class="prose prose-neutral dark:prose-invert max-w-none">
     <header class="mb-24 not-prose max-w-4xl">
       <h1 class="text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-gray-900 dark:text-white">
