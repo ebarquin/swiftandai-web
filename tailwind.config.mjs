@@ -5,7 +5,7 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['-apple-system', 'BlinkMacSystemFont', '"Inter"', 'system-ui', 'sans-serif'],
+				sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"'],
 				mono: ['"SF Mono"', 'Monaco', 'Menlo', 'monospace'],
 			},
 			colors: {

@@ -50,15 +50,12 @@ const { title } = Astro.props;
         </script>
 
         <style is:global>
-            body {
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            }
             html.dark {
                 color-scheme: dark;
             }
         </style>
     </head>
-    <body class="bg-[#fbfbfd] dark:bg-[#1d1d1f] text-[#1d1d1f] dark:text-[#f5f5f7] antialiased transition-colors duration-300">
+    <body class="font-sans bg-[#fbfbfd] dark:bg-[#1d1d1f] text-[#1d1d1f] dark:text-[#f5f5f7] antialiased transition-colors duration-300">
         <nav class="sticky top-0 z-50 w-full bg-white/80 dark:bg-[#1d1d1f]/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-300">
             <div id="progress-bar" class="absolute bottom-0 left-0 h-[2px] bg-primary w-0 transition-all duration-150"></div>
             
