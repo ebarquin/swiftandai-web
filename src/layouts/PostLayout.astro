@@ -30,6 +30,11 @@ const schema = {
 <Layout title={title} description={description} image={image} date={date} author={author} schema={schema}>
   <article class="prose prose-slate dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-primary leading-relaxed max-w-none">
     <header class="mb-24 not-prose max-w-4xl">
+      {date && (
+        <time datetime={date} class="block text-sm font-mono text-gray-400 mb-6 tracking-wide">
+          {new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      )}
       <h1 class="text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-gray-900 dark:text-white">
         {title}
       </h1>
