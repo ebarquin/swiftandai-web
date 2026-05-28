@@ -2,7 +2,7 @@
 layout: ../../layouts/PostLayout.astro
 title: "Diseñar una UI de chat que no sabe nada de LLMs (y por qué eso importa)"
 date: "2025-12-27"
-description: "Separar la UI de chat de la lógica de los LLMs no es una optimización: es una decisión arquitectónica que evita acoplamiento, suposiciones implícitas y deuda técnica."
+description: "Separar la UI de chat de la lógica LLM no es una optimización: es una decisión arquitectónica que evita acoplamiento y deuda técnica."
 image: /images/posts/chatkit-ui.png
 imageAlt: Ilustración conceptual de una interfaz de chat desacoplada de la lógica de IA
 ---
