@@ -1,9 +1,12 @@
 ---
 import Layout from "./Layout.astro";
 
-const { title, frontmatter } = Astro.props;
+const { title, frontmatter, rawContent } = Astro.props;
 const { image, imageAlt, description, date, tags } = frontmatter ?? {};
 const author = 'Eugenio Barquín';
+
+const wordCount = rawContent ? rawContent().trim().split(/\s+/).length : 0;
+const readingTime = Math.max(1, Math.round(wordCount / 200));
 const siteUrl = 'https://swiftandai.com';
 
 const schema = {
@@ -35,6 +38,9 @@ const schema = {
           <time datetime={date} class="text-sm font-mono text-gray-400 tracking-wide">
             {new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
           </time>
+        )}
+        {wordCount > 0 && (
+          <span class="text-sm font-mono text-gray-400">{readingTime} min de lectura</span>
         )}
         {tags && (
           <div class="flex gap-1.5 flex-wrap">
