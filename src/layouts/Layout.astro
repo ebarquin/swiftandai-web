@@ -16,6 +16,7 @@ const pageUrl = `${siteUrl}${Astro.url.pathname}`;
 const ogImage = image ? `${siteUrl}${image}` : `${siteUrl}/web-app-manifest-512x512.png`;
 const metaDescription = description ?? 'Explorando la intersección del desarrollo nativo en Apple y la inteligencia artificial integrada.';
 const isArticle = !!date;
+const pageTitle = !title ? 'Swift & AI' : title.includes('Swift & AI') ? title : `${title} | Swift & AI`;
 ---
 
 <!doctype html>
@@ -31,13 +32,13 @@ const isArticle = !!date;
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
         
-        <title>{title} | Swift & AI</title>
+        <title>{pageTitle}</title>
         <meta name="description" content={metaDescription} />
         <link rel="canonical" href={pageUrl} />
 
         <meta property="og:type" content={isArticle ? 'article' : 'website'} />
         <meta property="og:url" content={pageUrl} />
-        <meta property="og:title" content={`${title} | Swift & AI`} />
+        <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={metaDescription} />
         <meta property="og:image" content={ogImage} />
         <meta property="og:locale" content="es_ES" />
@@ -50,7 +51,7 @@ const isArticle = !!date;
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={pageUrl} />
-        <meta name="twitter:title" content={`${title} | Swift & AI`} />
+        <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={metaDescription} />
         <meta name="twitter:image" content={ogImage} />
         {!import.meta.env.DEV && (
