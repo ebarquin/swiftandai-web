@@ -4,9 +4,30 @@ import Layout from "./Layout.astro";
 const { title, frontmatter } = Astro.props;
 const { image, imageAlt, description, date } = frontmatter ?? {};
 const author = 'Eugenio Barquín';
+const siteUrl = 'https://swiftandai.com';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  image: image ? `${siteUrl}${image}` : undefined,
+  datePublished: date,
+  author: {
+    '@type': 'Person',
+    name: author,
+    url: `${siteUrl}/about`,
+  },
+  publisher: {
+    '@type': 'Person',
+    name: author,
+    url: siteUrl,
+  },
+  url: `${siteUrl}${Astro.url.pathname}`,
+};
 ---
 
-<Layout title={title} description={description} image={image} date={date} author={author}>
+<Layout title={title} description={description} image={image} date={date} author={author} schema={schema}>
   <article class="prose prose-slate dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-primary leading-relaxed max-w-none">
     <header class="mb-24 not-prose max-w-4xl">
       <h1 class="text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-gray-900 dark:text-white">

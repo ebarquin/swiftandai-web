@@ -1,8 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Eugenio Barquín',
+  url: 'https://swiftandai.com',
+  jobTitle: 'AI Systems Engineer',
+  description: 'Diseño software nativo donde la IA es una capacidad, no una dependencia. Especializado en Swift, Core ML y agentes LLM.',
+  sameAs: [
+    'https://github.com/ebarquin',
+    'https://www.linkedin.com/in/eugenio-barquin/',
+  ],
+};
 ---
 
-<Layout title="Sobre mí">
+<Layout title="Sobre mí" schema={schema}>
     <div class="py-10">
         <section class="mb-16">
             <p class="text-primary font-bold tracking-[0.2em] uppercase text-xs mb-4">Desarrollador de Software</p>

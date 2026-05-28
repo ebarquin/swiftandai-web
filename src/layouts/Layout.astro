@@ -7,9 +7,10 @@ interface Props {
     image?: string;
     date?: string;
     author?: string;
+    schema?: object;
 }
 
-const { title, description, image, date, author } = Astro.props;
+const { title, description, image, date, author, schema } = Astro.props;
 const siteUrl = 'https://swiftandai.com';
 const pageUrl = `${siteUrl}${Astro.url.pathname}`;
 const ogImage = image ? `${siteUrl}${image}` : `${siteUrl}/web-app-manifest-512x512.png`;
@@ -44,6 +45,8 @@ const isArticle = !!date;
         {isArticle && <meta property="article:published_time" content={date} />}
         {isArticle && author && <meta property="article:author" content={author} />}
         <meta name="author" content={author ?? 'Eugenio Barquín'} />
+
+        {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={pageUrl} />
