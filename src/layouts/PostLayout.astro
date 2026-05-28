@@ -2,7 +2,7 @@
 import Layout from "./Layout.astro";
 
 const { title, frontmatter } = Astro.props;
-const { image, imageAlt, description, date } = frontmatter ?? {};
+const { image, imageAlt, description, date, tags } = frontmatter ?? {};
 const author = 'Eugenio Barquín';
 const siteUrl = 'https://swiftandai.com';
 
@@ -30,11 +30,22 @@ const schema = {
 <Layout title={title} description={description} image={image} date={date} author={author} schema={schema}>
   <article class="prose prose-slate dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-primary leading-relaxed max-w-none">
     <header class="mb-24 not-prose max-w-4xl">
-      {date && (
-        <time datetime={date} class="block text-sm font-mono text-gray-400 mb-6 tracking-wide">
-          {new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </time>
-      )}
+      <div class="flex items-center gap-4 mb-6 flex-wrap">
+        {date && (
+          <time datetime={date} class="text-sm font-mono text-gray-400 tracking-wide">
+            {new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </time>
+        )}
+        {tags && (
+          <div class="flex gap-1.5 flex-wrap">
+            {tags.map((tag: string) => (
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
       <h1 class="text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-gray-900 dark:text-white">
         {title}
       </h1>

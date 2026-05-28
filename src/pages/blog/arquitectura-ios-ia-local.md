@@ -5,6 +5,7 @@ date: "2025-12-22"
 description: "Ejecutar modelos en local no es una optimización, sino una decisión arquitectónica en aplicaciones iOS."
 image: /images/posts/ia-local.png
 imageAlt: Ilustración conceptual sobre inferencia local y arquitectura en iOS
+tags: ["Swift", "Core ML", "Arquitectura"]
 ---
 
 Cuando hablamos de integrar inteligencia artificial en una app iOS, casi siempre empezamos por el modelo.

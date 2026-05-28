@@ -5,6 +5,7 @@ date: "2026-05-27"
 description: "Todo el mundo llama agente a un chatbot con un system prompt. La diferencia real está en si el sistema decide y actúa, o solo responde."
 image: /images/posts/agentes-llm.png
 imageAlt: Diagrama de un agente LLM con tools y memoria
+tags: ["IA", "Agentes LLM", "Python"]
 ---
 
 Houston, tenemos un problema. Y es que la industria ha empezado a llamar "agente" a cualquier cosa que tenga un prompt largo, memoria de conversación y una respuesta más o menos convincente. Pero eso no convierte un chatbot en un agente.

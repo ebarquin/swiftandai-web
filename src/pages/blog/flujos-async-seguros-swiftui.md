@@ -5,6 +5,7 @@ date: "2026-02-16"
 description: "La concurrencia en SwiftUI es potente, pero sin una arquitectura clara de estado es fácil caer en race conditions y comportamientos inconsistentes."
 image: /images/posts/swiftui-async-safe.png
 imageAlt: "Ilustración de flujos asíncronos y arquitectura en SwiftUI"
+tags: ["Swift", "SwiftUI", "Concurrencia"]
 ---
 
 ## La historia detrás de este proyecto
