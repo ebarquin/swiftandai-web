@@ -1,16 +1,14 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // Integra Tailwind para el diseño
-  integrations: [tailwind()],
-  // Configura el renderizado de Markdown
+  site: 'https://swiftandai.com',
+  integrations: [tailwind(), sitemap()],
   markdown: {
     shikiConfig: {
-      // El tema 'github-dark' es el que más se parece a Xcode oscuro
       theme: 'github-dark',
-      // Forzamos la carga de Swift para que reconozca la sintaxis
-      langs: ['swift', 'bash', 'json'],
+      langs: ['swift', 'bash', 'json', 'python'],
     },
   },
 });
