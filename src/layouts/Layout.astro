@@ -85,6 +85,11 @@ const pageTitle = !title ? 'Swift & AI' : title.includes('Swift & AI') ? title :
             html.dark {
                 color-scheme: dark;
             }
+            @media (prefers-reduced-motion: reduce) {
+                .animate-pulse {
+                    animation: none;
+                }
+            }
         </style>
     </head>
     <body class="font-sans bg-[#fbfbfd] dark:bg-[#1d1d1f] text-[#1d1d1f] dark:text-[#f5f5f7] antialiased transition-colors duration-300">
