@@ -1,6 +1,4 @@
 ---
-// HeroVisual.astro
-// Visual técnico y sobrio para la home. No depende de datos ni props.
 ---
 
 <div class="relative rounded-card border border-gray-100 dark:border-gray-800 bg-white/60 dark:bg-[#1d1d1f]/40 backdrop-blur-xl p-8 shadow-sm">
@@ -13,29 +11,73 @@
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
   >
-    <rect x="46" y="34" width="268" height="172" rx="28" stroke="currentColor" stroke-opacity="0.12" stroke-width="2"/>
-    <rect x="92" y="72" width="176" height="96" rx="20" stroke="currentColor" stroke-opacity="0.14" stroke-width="2"/>
+    <!-- iPhone body -->
+    <rect x="16" y="20" width="76" height="130" rx="14" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+    <!-- iPhone screen -->
+    <rect x="24" y="40" width="60" height="88" rx="4" stroke="currentColor" stroke-opacity="0.14" stroke-width="1.5"/>
+    <!-- Camera pill -->
+    <rect x="38" y="27" width="32" height="8" rx="4" stroke="currentColor" stroke-opacity="0.18" stroke-width="1.5"/>
+    <!-- Home indicator -->
+    <rect x="42" y="138" width="24" height="4" rx="2" fill="currentColor" fill-opacity="0.15"/>
+    <!-- Swift bird (simplified) inside screen -->
+    <path d="M43 78 C43 68 54 62 62 66 C58 62 68 58 72 64 C76 56 70 48 60 50 C68 44 78 50 76 62 C82 56 80 70 72 74 C78 78 74 88 64 86 C56 90 44 86 43 78Z" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.2" stroke-linejoin="round"/>
 
-    <path d="M76 120H92M268 120H284" stroke="currentColor" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
-    <path d="M180 48V72M180 168V192" stroke="currentColor" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
+    <!-- Arrow phone → box -->
+    <path d="M96 85 L126 85" stroke="currentColor" stroke-opacity="0.18" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round"/>
+    <path d="M122 81 L128 85 L122 89" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-    <circle cx="76" cy="120" r="6" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="284" cy="120" r="6" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="180" cy="48" r="6" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="180" cy="192" r="6" fill="currentColor" fill-opacity="0.18"/>
+    <!-- Core ML box -->
+    <rect x="130" y="60" width="100" height="50" rx="10" stroke="currentColor" stroke-opacity="0.18" stroke-width="1.5"/>
+    <!-- Box inner grid (chip pattern) -->
+    <rect x="148" y="72" width="64" height="26" rx="4" stroke="currentColor" stroke-opacity="0.12" stroke-width="1"/>
+    <line x1="164" y1="72" x2="164" y2="98" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="180" y1="72" x2="180" y2="98" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="196" y1="72" x2="196" y2="98" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="148" y1="85" x2="212" y2="85" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <!-- Connector pins -->
+    <line x1="148" y1="78" x2="140" y2="78" stroke="currentColor" stroke-opacity="0.14" stroke-width="1.5"/>
+    <line x1="148" y1="85" x2="140" y2="85" stroke="currentColor" stroke-opacity="0.14" stroke-width="1.5"/>
+    <line x1="148" y1="92" x2="140" y2="92" stroke="currentColor" stroke-opacity="0.14" stroke-width="1.5"/>
+    <line x1="212" y1="78" x2="220" y2="78" stroke="currentColor" stroke-opacity="0.14" stroke-width="1.5"/>
+    <line x1="212" y1="85" x2="220" y2="85" stroke="currentColor" stroke-opacity="0.14" stroke-width="1.5"/>
+    <line x1="212" y1="92" x2="220" y2="92" stroke="currentColor" stroke-opacity="0.14" stroke-width="1.5"/>
 
-    <path d="M132 96H228M132 120H228M132 144H208" stroke="currentColor" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="132" cy="96" r="4" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="228" cy="96" r="4" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="132" cy="120" r="4" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="228" cy="120" r="4" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="132" cy="144" r="4" fill="currentColor" fill-opacity="0.18"/>
-    <circle cx="208" cy="144" r="4" fill="currentColor" fill-opacity="0.18"/>
+    <!-- Arrow box → neural net -->
+    <path d="M234 85 L252 85" stroke="currentColor" stroke-opacity="0.18" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round"/>
+    <path d="M248 81 L254 85 L248 89" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-    <path d="M92 72L76 120M268 72L284 120M92 168L76 120M268 168L284 120" stroke="currentColor" stroke-opacity="0.10" stroke-width="2"/>
+    <!-- Neural network — input layer -->
+    <circle cx="268" cy="68" r="6" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+    <circle cx="268" cy="85" r="6" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+    <circle cx="268" cy="102" r="6" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+    <!-- Hidden layer -->
+    <circle cx="298" cy="74" r="6" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+    <circle cx="298" cy="95" r="6" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+    <!-- Output node -->
+    <circle cx="328" cy="85" r="8" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5"/>
+    <!-- Connections input → hidden -->
+    <line x1="274" y1="68" x2="292" y2="74" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="274" y1="68" x2="292" y2="95" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="274" y1="85" x2="292" y2="74" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="274" y1="85" x2="292" y2="95" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="274" y1="102" x2="292" y2="74" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="274" y1="102" x2="292" y2="95" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+    <!-- Connections hidden → output -->
+    <line x1="304" y1="74" x2="320" y2="85" stroke="currentColor" stroke-opacity="0.12" stroke-width="1"/>
+    <line x1="304" y1="95" x2="320" y2="85" stroke="currentColor" stroke-opacity="0.12" stroke-width="1"/>
+
+    <!-- Labels -->
+    <text x="54" y="175" text-anchor="middle" font-family="monospace" font-size="8" fill="currentColor" fill-opacity="0.3">Swift</text>
+    <text x="180" y="125" text-anchor="middle" font-family="monospace" font-size="8" fill="currentColor" fill-opacity="0.3">Core ML</text>
+    <text x="298" y="125" text-anchor="middle" font-family="monospace" font-size="8" fill="currentColor" fill-opacity="0.3">On-device</text>
+
+    <!-- Privacy badge -->
+    <rect x="270" y="20" width="74" height="20" rx="10" fill="currentColor" fill-opacity="0.07" stroke="currentColor" stroke-opacity="0.14" stroke-width="1"/>
+    <circle cx="283" cy="30" r="3" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.2"/>
+    <text x="316" y="34" text-anchor="middle" font-family="monospace" font-size="8" fill="currentColor" fill-opacity="0.35">Private</text>
   </svg>
 
   <p class="relative mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
-    On-device · Core ML · Arquitectura
+    Swift · Core ML · On-device AI
   </p>
 </div>
