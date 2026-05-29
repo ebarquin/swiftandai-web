@@ -28,76 +28,222 @@ const schema = {
   },
   url: `${siteUrl}${Astro.url.pathname}`,
 };
+
+function tagClass(tag: string): string {
+  const t = tag.toLowerCase();
+  if (['ia','agentes llm','python','langgraph','rag','nlp','fastapi'].includes(t)) return 'ai';
+  if (['swift','swiftui','ios','core ml'].includes(t)) return 'swift';
+  return '';
+}
 ---
 
 <Layout title={title} description={description} image={image} date={date} author={author} schema={schema}>
-  <article class="prose prose-slate dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-primary leading-relaxed max-w-none">
-    <header class="mb-24 not-prose max-w-4xl">
-      <div class="flex items-center gap-4 mb-6 flex-wrap">
+
+  <div class="post-wrap">
+
+    <!-- Header del artículo -->
+    <header class="post-header">
+      <div class="post-meta">
         {date && (
-          <time datetime={date} class="text-sm font-mono text-gray-400 tracking-wide">
+          <time datetime={date} class="post-date">
             {new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
           </time>
         )}
         {wordCount > 0 && (
-          <span class="text-sm font-mono text-gray-400">{readingTime} min de lectura</span>
+          <span class="post-reading">· {readingTime} min</span>
         )}
-        {tags && (
-          <div class="flex gap-1.5 flex-wrap">
+        {tags && tags.length > 0 && (
+          <div class="post-tags">
             {tags.map((tag: string) => (
-              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                {tag}
-              </span>
+              <span class={`ptag ${tagClass(tag)}`}>{tag}</span>
             ))}
           </div>
         )}
       </div>
-      <h1 class="text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-gray-900 dark:text-white">
-        {title}
-      </h1>
+
+      <h1 class="post-title">{title}</h1>
 
       {description && (
-        <p class="mt-6 text-2xl md:text-3xl font-semibold tracking-tight text-gray-700 dark:text-gray-300">
-          {description}
-        </p>
+        <p class="post-desc">{description}</p>
       )}
     </header>
 
     {image && (
-  <div class="mb-20 not-prose flex justify-center">
-    <img
-      src={image}
-      alt={imageAlt || title}
-      width="1536"
-      height="1024"
-      class="w-full max-w-3xl rounded-card border border-gray-100 dark:border-gray-800 shadow-sm object-cover"
-    />
-  </div>
-)}
-    <slot />
-  </article>
-
-  <!-- Autor (epílogo del post) -->
-  <section class="mt-20 pt-10 border-t border-gray-100 dark:border-gray-800 not-prose">
-    <div class="flex items-center gap-6 p-8 bg-gray-50/50 dark:bg-gray-800/20 rounded-card border border-gray-100 dark:border-gray-800">
-      <img
-        src="/autor.png"
-        alt="Eugenio Barquín"
-        width="1024"
-        height="1536"
-        class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-800 shadow-md transition-all duration-500 object-cover"
-      />
-      <div>
-        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-1">
-          Autor
-        </p>
-        <h3 class="text-xl font-bold !text-gray-900 dark:!text-white">
-          Eugenio Barquín
-        </h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          AI Systems Engineer. Agentes LLM, RAG y sistemas conversacionales. Swift & iOS como ventaja diferencial.
-        </p>
+      <div class="post-img-wrap">
+        <img
+          src={image}
+          alt={imageAlt || title}
+          width="1536"
+          height="1024"
+          class="post-img"
+        />
       </div>
+    )}
+
+    <!-- Contenido del post -->
+    <div class="post-body">
+      <slot />
     </div>
-  </section>
+
+    <!-- Autor -->
+    <section class="post-author">
+      <img src="/autor.png" alt="Eugenio Barquín" width="80" height="80" class="author-avatar" />
+      <div>
+        <p class="author-label">Autor</p>
+        <h3 class="author-name">Eugenio Barquín</h3>
+        <p class="author-bio">AI Systems Engineer. Agentes LLM, RAG y sistemas conversacionales. Swift &amp; iOS como ventaja diferencial.</p>
+      </div>
+    </section>
+
+  </div>
+
 </Layout>
+
+<style is:global>
+/* POST LAYOUT */
+.post-wrap {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 72px 0 80px;
+}
+
+.post-header { margin-bottom: 48px; }
+
+.post-meta {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  margin-bottom: 28px;
+  font-family: var(--font-mono); font-size: 13px; color: var(--fg-mute);
+}
+.post-date { color: var(--fg-mute); }
+.post-reading { color: var(--fg-mute); }
+.post-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.ptag {
+  font-family: var(--font-mono); font-size: 12px;
+  padding: 4px 11px; border-radius: 999px;
+  border: 1px solid var(--line-2); color: var(--fg-dim);
+}
+.ptag.swift { color: var(--swift); border-color: color-mix(in oklab, var(--swift) 45%, transparent); }
+.ptag.ai    { color: var(--ai);    border-color: color-mix(in oklab, var(--ai) 45%, transparent); }
+
+.post-title {
+  font-size: clamp(36px, 5.5vw, 60px);
+  font-weight: 800; letter-spacing: -0.03em; line-height: 1.05;
+  color: var(--fg); text-wrap: balance;
+  margin-bottom: 20px;
+}
+
+.post-desc {
+  font-size: 20px; color: var(--fg-dim); line-height: 1.5;
+  margin: 0; font-weight: 500; letter-spacing: -0.01em;
+  max-width: 56ch; text-wrap: pretty;
+}
+
+.post-img-wrap { margin-bottom: 48px; }
+.post-img {
+  width: 100%; border-radius: var(--r);
+  border: 1px solid var(--line); object-fit: cover;
+}
+
+/* PROSE — contenido del markdown */
+.post-body {
+  color: var(--fg-dim);
+  font-size: 18px; line-height: 1.75;
+}
+.post-body h2 {
+  font-size: clamp(24px, 3vw, 32px); font-weight: 700;
+  color: var(--fg); margin: 56px 0 20px; letter-spacing: -0.03em;
+}
+.post-body h3 {
+  font-size: clamp(20px, 2.4vw, 26px); font-weight: 700;
+  color: var(--fg); margin: 40px 0 16px; letter-spacing: -0.02em;
+}
+.post-body h4 {
+  font-size: 18px; font-weight: 600;
+  color: var(--fg); margin: 32px 0 12px;
+}
+.post-body p { margin: 0 0 24px; }
+.post-body strong { color: var(--fg); font-weight: 600; }
+.post-body em { color: var(--fg); }
+.post-body a {
+  color: var(--ai); text-decoration: underline;
+  text-underline-offset: 3px; text-decoration-color: color-mix(in oklab, var(--ai) 40%, transparent);
+  transition: color .18s, text-decoration-color .18s;
+}
+.post-body a:hover {
+  color: var(--fg); text-decoration-color: var(--fg);
+}
+.post-body ul, .post-body ol {
+  margin: 0 0 24px; padding-left: 24px;
+}
+.post-body li { margin-bottom: 8px; }
+.post-body blockquote {
+  border-left: 3px solid var(--swift); margin: 32px 0;
+  padding: 16px 24px; background: var(--bg-1); border-radius: 0 var(--r) var(--r) 0;
+  color: var(--fg-dim); font-style: italic;
+}
+.post-body blockquote p { margin: 0; }
+.post-body hr {
+  border: none; border-top: 1px solid var(--line);
+  margin: 48px 0;
+}
+.post-body code {
+  font-family: var(--font-mono); font-size: 0.87em;
+  background: var(--bg-2); color: var(--swift);
+  padding: 2px 7px; border-radius: 5px;
+  border: 1px solid var(--line);
+}
+.post-body pre {
+  background: var(--bg-1); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 24px 28px;
+  overflow-x: auto; margin: 32px 0;
+}
+.post-body pre code {
+  background: none; border: none; padding: 0;
+  color: var(--fg-dim); font-size: 14.5px; line-height: 1.7;
+}
+.post-body img {
+  max-width: 100%; border-radius: var(--r);
+  border: 1px solid var(--line); margin: 32px 0;
+}
+.post-body table {
+  width: 100%; border-collapse: collapse; margin: 32px 0; font-size: 15px;
+}
+.post-body th {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--fg-mute); font-weight: 500;
+  border-bottom: 1px solid var(--line-2); padding: 10px 16px; text-align: left;
+}
+.post-body td {
+  padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--fg-dim);
+}
+.post-body tr:last-child td { border-bottom: none; }
+
+/* AUTOR */
+.post-author {
+  margin-top: 64px; padding-top: 40px;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; gap: 24px;
+  background: var(--bg-1); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 28px 32px;
+}
+.author-avatar {
+  width: 60px; height: 60px; border-radius: 50%;
+  border: 1px solid var(--line-2); object-fit: cover; flex: none;
+}
+.author-label {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fg-mute); margin: 0 0 4px;
+}
+.author-name {
+  font-size: 18px; font-weight: 700; color: var(--fg);
+  margin: 0 0 6px; letter-spacing: -0.02em;
+}
+.author-bio {
+  font-size: 14px; color: var(--fg-dim); margin: 0; line-height: 1.5;
+}
+
+@media (max-width: 680px) {
+  .post-wrap { padding: 48px 20px 64px; }
+  .post-author { flex-direction: column; align-items: flex-start; }
+}
+</style>

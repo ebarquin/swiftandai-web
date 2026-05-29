@@ -1,98 +1,842 @@
 ---
-import HeroVisual from '../components/HeroVisual.astro';
-import Layout from '../layouts/Layout.astro';
 const posts = await Astro.glob('./blog/*.md');
-const sortedPosts = posts.sort((a, b) => 
+const sorted = posts.sort((a, b) =>
     new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()
 );
 
-const featuredPosts = sortedPosts.slice(0, 5);
-const archivePosts = sortedPosts.slice(5);
+const featured = sorted[0];
+const gridPosts = sorted.slice(1);
+
+function getDomain(tags: string[]): string {
+    const t = tags.map(s => s.toLowerCase());
+    const isSwift = t.some(s => ['swift', 'swiftui', 'ios'].includes(s));
+    const isAI    = t.some(s => ['ia', 'agentes llm', 'python', 'langgraph', 'rag', 'nlp', 'fastapi'].includes(s));
+    const isBoth  = t.includes('core ml') || (isSwift && isAI);
+    if (isBoth) return 'both';
+    if (isAI)   return 'ai';
+    return 'swift';
+}
+
+function readingTime(content: string): number {
+    return Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
+}
+
+function patClass(domain: string, i: number): string {
+    const variants: Record<string, string[]> = {
+        swift: ['pat swift', 'pat swift layers'],
+        ai:    ['pat ai', 'pat ai grid'],
+        both:  ['pat dual ai', 'pat dual layers'],
+    };
+    const arr = variants[domain] ?? variants['swift'];
+    return arr[i % arr.length];
+}
+
+function tagClass(tag: string): string {
+    const t = tag.toLowerCase();
+    if (['ia','agentes llm','python','langgraph','rag','nlp','fastapi'].includes(t)) return 'ai';
+    if (['swift','swiftui','ios','core ml'].includes(t)) return 'swift';
+    return '';
+}
 ---
 
-<Layout title="Swift & AI — iOS, Core ML y agentes LLM">
-    <section class="mb-28">
-        <div class="md:flex md:items-start md:justify-between md:gap-16">
-            <!-- Hero text -->
-            <div class="md:max-w-2xl">
-                <p class="text-primary font-bold tracking-[0.2em] uppercase text-xs mb-4">AI Systems Engineer</p>
-                <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6 leading-[1.1]">
-                    Diseño software nativo donde la IA es una capacidad,<br/><span class="text-gray-400">no una dependencia.</span>
-                </h1>
-                <p class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">
-                    Diseño sistemas de IA — agentes, RAG, arquitectura conversacional. Swift e iOS son mi ventaja donde otros no llegan.
-                </p>
-            </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Swift & AI — iOS, Core ML y agentes LLM</title>
+<meta name="description" content="AI Systems Engineering — agentes LLM, RAG y arquitecturas conversacionales. Swift e iOS como ventaja diferencial." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg-0: #08090c; --bg-1: #0d0f15; --bg-2: #12141c; --bg-3: #181b25;
+  --line: rgba(255,255,255,0.08); --line-2: rgba(255,255,255,0.14);
+  --fg: #eceef4; --fg-dim: #a3a9b8; --fg-mute: #5e6575;
+  --swift: oklch(0.76 0.16 52); --swift-soft: oklch(0.76 0.16 52 / 0.14);
+  --ai: oklch(0.80 0.13 205);   --ai-soft: oklch(0.80 0.13 205 / 0.14);
+  --accent: var(--swift);
+  --maxw: 1180px; --r: 16px;
+  --font-display: "Open Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --depth: 1;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg-0); color: var(--fg);
+  font-family: var(--font-display); font-size: 17px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: calc(var(--depth) * 1);
+  background:
+    radial-gradient(900px 600px at 12% -5%, oklch(0.76 0.16 52 / 0.10), transparent 60%),
+    radial-gradient(1000px 700px at 95% 8%, oklch(0.80 0.13 205 / 0.10), transparent 60%),
+    radial-gradient(800px 800px at 50% 120%, oklch(0.72 0.10 280 / 0.08), transparent 60%);
+}
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+a { color: inherit; text-decoration: none; }
+h1,h2,h3 { margin: 0; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; }
+::selection { background: oklch(0.80 0.13 205 / 0.35); }
+.mono { font-family: var(--font-mono); letter-spacing: 0; }
+.kicker {
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--fg-mute);
+  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
+}
+.kicker::before { content: ""; width: 22px; height: 1px; background: var(--accent); }
 
-            <!-- Hero visual -->
-            <div class="mt-12 md:mt-2 md:w-[340px] md:shrink-0">
-                <HeroVisual />
-            </div>
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(14px);
+  background: color-mix(in oklab, var(--bg-0) 72%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+.nav-in {
+  max-width: var(--maxw); margin: 0 auto; padding: 16px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+.brand-mark {
+  width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--swift), var(--ai));
+  color: #08090c; font-family: var(--font-mono); font-weight: 700; font-size: 11px; letter-spacing: -0.02em;
+}
+.brand b { font-size: 17px; letter-spacing: -0.02em; }
+.brand span { color: var(--fg-mute); font-weight: 400; }
+.nav-links { display: flex; align-items: center; gap: 28px; font-size: 15px; }
+.nav-links a { color: var(--fg-dim); transition: color .18s; }
+.nav-links a:hover { color: var(--fg); }
+.nav-links .icon { display: grid; place-items: center; width: 20px; height: 20px; }
+.nav-links svg { width: 18px; height: 18px; }
+
+/* HERO */
+.hero { padding: 96px 0 64px; }
+.hero-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 56px; align-items: end; }
+.hero h1 { font-size: clamp(40px, 6.2vw, 76px); margin: 26px 0 0; text-wrap: balance; }
+.hero h1 .hl-swift { color: var(--swift); }
+.hero h1 .hl-ai { color: var(--ai); }
+.hero-sub { margin: 26px 0 0; color: var(--fg-dim); font-size: 19px; max-width: 52ch; text-wrap: pretty; }
+.hero-who { margin-top: 30px; display: flex; align-items: center; gap: 14px; font-size: 15px; color: var(--fg-dim); }
+.who-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; border: 1px solid var(--line-2); flex: none; }
+.who-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.hero-who b { color: var(--fg); font-weight: 600; }
+.badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
+.badge {
+  font-family: var(--font-mono); font-size: 13px; padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--line-2); background: var(--bg-1); color: var(--fg-dim);
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: transform .18s, border-color .18s, color .18s;
+}
+.badge .dot { width: 7px; height: 7px; border-radius: 50%; }
+.badge:hover { transform: translateY(-2px); color: var(--fg); border-color: var(--accent); }
+.hero-art {
+  aspect-ratio: 1 / 1.05; border-radius: var(--r); border: 1px solid var(--line);
+  background: var(--bg-1); position: relative; overflow: hidden;
+}
+.hero-art .pat { position: absolute; inset: 0; }
+.hero-art-cap {
+  position: absolute; left: 18px; bottom: 16px; right: 18px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--fg-mute);
+  display: flex; justify-content: space-between;
+}
+
+/* HERO VARIANT SWITCH */
+.hero-vb { display: none; }
+[data-hero="b"] .hero-va { display: none; }
+[data-hero="b"] .hero-vb { display: block; text-align: center; }
+[data-hero="b"] .hero { padding-top: 84px; }
+
+/* HERO VARIANT B — code editor */
+.hero-vb .kicker { display: inline-flex; }
+.code-win {
+  max-width: 880px; margin: 34px auto 0; position: relative;
+  border: 1px solid var(--line-2); border-radius: 14px; background: var(--bg-1);
+  box-shadow: 0 48px 120px -50px #000,
+              0 0 80px -26px oklch(0.76 0.16 52 / .38),
+              0 0 80px -26px oklch(0.80 0.13 205 / .38);
+  overflow: hidden; text-align: left;
+}
+.code-win::before {
+  content: ""; position: absolute; inset: 0; border-radius: 14px; padding: 1px;
+  background: linear-gradient(135deg, var(--swift), transparent 38%, transparent 62%, var(--ai));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: .85;
+}
+.code-bar {
+  display: flex; align-items: center; gap: 14px; padding: 13px 18px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg-2) 70%, transparent);
+}
+.code-bar .dots { display: flex; gap: 7px; }
+.code-bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+.code-bar .dots i:nth-child(1){ background: oklch(0.70 0.17 25); }
+.code-bar .dots i:nth-child(2){ background: oklch(0.83 0.14 85); }
+.code-bar .dots i:nth-child(3){ background: oklch(0.78 0.14 150); }
+.code-file { font-family: var(--font-mono); font-size: 13px; color: var(--fg-dim); }
+.code-meta { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--fg-mute); white-space: nowrap; }
+.code-body {
+  font-family: var(--font-mono); font-size: clamp(13.5px, 1.5vw, 18px);
+  line-height: 2; padding: 22px 26px 26px; color: var(--fg-dim);
+}
+.cl { display: flex; align-items: flex-start; gap: 20px; }
+.cl .ln { color: var(--fg-mute); opacity: .5; width: 20px; text-align: right; flex: none; user-select: none; font-size: .82em; line-height: 2.4; }
+.cl .cd { flex: 1; min-width: 0; }
+.tab { display: inline-block; width: 2.4ch; }
+.tok-kw { color: var(--swift); }
+.tok-type { color: var(--ai); }
+.tok-prop { color: color-mix(in oklab, var(--ai) 65%, var(--fg)); }
+.cmt { color: var(--fg-mute); }
+.code-body .code-h1 {
+  display: inline; font-family: var(--font-mono); font-size: inherit;
+  font-weight: 500; line-height: 2; letter-spacing: 0; color: var(--fg); margin: 0; text-wrap: pretty;
+}
+.cur { display: inline-block; width: 9px; height: 1.02em; background: var(--ai); margin-left: 5px; transform: translateY(3px); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.vb-sub { text-align: center; margin: 32px auto 0; }
+.vb-badges { justify-content: center; }
+.vb-who { justify-content: center; margin-top: 28px; text-align: left; }
+
+/* SECTIONS */
+section.block { padding: 72px 0; position: relative; z-index: 1; }
+.sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 36px; }
+.sec-head h2 { font-size: clamp(28px, 3.4vw, 40px); }
+.sec-head .lead { color: var(--fg-dim); margin-top: 10px; font-size: 16px; max-width: 46ch; }
+.sec-link { font-family: var(--font-mono); font-size: 13px; color: var(--fg-dim); white-space: nowrap; }
+.sec-link:hover { color: var(--accent); }
+
+/* ARCHITECTURE DIAGRAM */
+.arch-svg { position: absolute; inset: 0; width: 100%; height: 100%; padding: 16px; }
+.arch-label { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; fill: var(--fg-mute); }
+.arch-node { stroke-width: 1.2; fill: var(--bg-2); }
+.swift-node { stroke: oklch(0.76 0.16 52 / 0.55); }
+.ai-node    { stroke: oklch(0.80 0.13 205 / 0.55); }
+.arch-text  { font-family: var(--font-mono); font-size: 11.5px; fill: var(--fg-dim); letter-spacing: -0.01em; }
+.arch-edge  { stroke-width: 1.5; stroke-dasharray: 4 3; }
+.swift-edge { stroke: oklch(0.76 0.16 52 / 0.45); }
+.ai-edge    { stroke: oklch(0.80 0.13 205 / 0.45); }
+.arch-arrow { }
+.swift-arrow { fill: oklch(0.76 0.16 52 / 0.55); }
+.ai-arrow    { fill: oklch(0.80 0.13 205 / 0.55); }
+.arch-center-ring { fill: none; stroke: url(#arch-grad); stroke-width: 1; opacity: .5; }
+.arch-center { fill: var(--bg-2); stroke: url(#arch-grad); stroke-width: 1.5; }
+.arch-center-text { font-family: var(--font-mono); font-size: 11px; font-weight: 700; fill: var(--fg); }
+.arch-center-sub  { font-family: var(--font-mono); font-size: 8px; fill: var(--fg-mute); }
+.arch-edge-center { stroke: var(--line-2); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.arch-badge { fill: var(--bg-2); stroke: var(--line-2); stroke-width: 1; }
+.arch-badge-dot { fill: oklch(0.80 0.13 205 / 0.8); }
+.arch-badge-text { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-mute); letter-spacing: .06em; }
+
+/* ABSTRACT PATTERNS */
+.pat { --c: var(--ai); }
+.pat.swift { --c: var(--swift); }
+.pat.ai    { --c: var(--ai); }
+.pat.dual  { --c: var(--swift); }
+.pat.ai::before, .pat.dual::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--ai) 80%, transparent) 1.6px, transparent 2px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(120% 100% at 80% 20%, #000 30%, transparent 75%);
+  opacity: .55;
+}
+.pat.swift::before {
+  content: ""; position: absolute; inset: -40%;
+  background: repeating-radial-gradient(circle at 30% 70%, transparent 0 16px, color-mix(in oklab, var(--swift) 55%, transparent) 16px 17px);
+  opacity: .5;
+}
+.pat::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(70% 60% at 75% 22%, color-mix(in oklab, var(--c) 38%, transparent), transparent 70%);
+}
+.pat.layers::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, transparent 0 22px, color-mix(in oklab, var(--c) 30%, transparent) 22px 23px);
+  mask-image: linear-gradient(120deg, #000, transparent 80%); opacity: .6;
+}
+.pat.grid::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(color-mix(in oklab, var(--c) 35%, transparent) 1px, transparent 1px) 0 0 / 30px 30px,
+    linear-gradient(90deg, color-mix(in oklab, var(--c) 35%, transparent) 1px, transparent 1px) 0 0 / 30px 30px;
+  mask-image: radial-gradient(120% 120% at 20% 10%, #000 20%, transparent 70%); opacity: .5;
+}
+
+/* FEATURED */
+.featured {
+  display: grid; grid-template-columns: 1.15fr 1fr;
+  border: 1px solid var(--line); border-radius: var(--r);
+  overflow: hidden; background: var(--bg-1); transition: border-color .25s;
+}
+.featured:hover { border-color: var(--line-2); }
+.featured-art { position: relative; min-height: 420px; background: var(--bg-2); overflow: hidden; }
+.featured-body { padding: 44px; display: flex; flex-direction: column; }
+.tagrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { font-family: var(--font-mono); font-size: 12px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--fg-dim); }
+.tag.swift { color: var(--swift); border-color: color-mix(in oklab, var(--swift) 45%, transparent); }
+.tag.ai    { color: var(--ai);    border-color: color-mix(in oklab, var(--ai) 45%, transparent); }
+.featured-body h3 { font-size: clamp(28px, 3.2vw, 42px); margin: 22px 0 0; text-wrap: balance; }
+.featured-body p { color: var(--fg-dim); margin: 18px 0 0; font-size: 17px; max-width: 46ch; }
+.featured-meta {
+  margin-top: auto; padding-top: 30px; display: flex; align-items: center; gap: 16px;
+  font-family: var(--font-mono); font-size: 13px; color: var(--fg-mute);
+}
+.read-cta { display: inline-flex; align-items: center; gap: 9px; color: var(--accent); font-weight: 600; font-size: 15px; margin-left: auto; }
+.read-cta svg { width: 16px; height: 16px; transition: transform .2s; }
+.featured:hover .read-cta svg { transform: translateX(4px); }
+.fbadge {
+  position: absolute; top: 20px; left: 20px; z-index: 2;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--bg-0); font-weight: 700;
+  padding: 6px 12px; border-radius: 999px;
+  background: linear-gradient(135deg, var(--swift), var(--ai));
+}
+
+/* GRID + FILTERS */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; }
+.filter {
+  font-family: var(--font-mono); font-size: 13px; padding: 9px 16px; border-radius: 999px;
+  border: 1px solid var(--line-2); background: transparent; color: var(--fg-dim);
+  cursor: pointer; transition: all .18s;
+}
+.filter:hover { color: var(--fg); }
+.filter.active { color: var(--bg-0); background: var(--fg); border-color: var(--fg); }
+.filter[data-f="swift"].active { background: var(--swift); border-color: var(--swift); }
+.filter[data-f="ai"].active    { background: var(--ai);    border-color: var(--ai); }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.card {
+  border: 1px solid var(--line); border-radius: var(--r); overflow: hidden;
+  background: var(--bg-1); display: flex; flex-direction: column;
+  transition: transform .25s cubic-bezier(.2,.7,.3,1), border-color .25s, box-shadow .25s;
+}
+.card:hover { transform: translateY(-6px); border-color: var(--line-2); box-shadow: 0 24px 50px -28px rgba(0,0,0,0.8); }
+.card-art { position: relative; height: 168px; overflow: hidden; background: var(--bg-2); }
+.card-body { padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.card h3 { font-size: 20px; text-wrap: balance; }
+.card p { color: var(--fg-dim); font-size: 15px; margin: 0; }
+.card-meta { margin-top: auto; font-family: var(--font-mono); font-size: 12px; color: var(--fg-mute); display: flex; align-items: center; gap: 10px; }
+.card.hide { display: none; }
+
+/* AHORA MISMO */
+.now-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.now-col { border: 1px solid var(--line); border-radius: var(--r); padding: 28px; background: var(--bg-1); transition: border-color .25s, transform .25s; }
+.now-col:hover { border-color: var(--line-2); transform: translateY(-4px); }
+.now-head { font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-mute); display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.now-head .pip { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent); }
+.now-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.now-col li { font-size: 15.5px; color: var(--fg); line-height: 1.45; }
+.now-col li span { display: block; color: var(--fg-mute); font-family: var(--font-mono); font-size: 12px; margin-top: 4px; }
+
+/* PROYECTOS */
+.proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.proj { border: 1px solid var(--line); border-radius: var(--r); padding: 30px; background: var(--bg-1); display: flex; flex-direction: column; gap: 16px; min-height: 240px; transition: border-color .25s, transform .25s; }
+.proj:hover { border-color: var(--line-2); transform: translateY(-4px); }
+.proj-top { display: flex; align-items: center; justify-content: space-between; }
+.proj-glyph { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 700; font-size: 18px; border: 1px solid var(--line-2); }
+.proj-glyph.swift { color: var(--swift); background: var(--swift-soft); }
+.proj-glyph.ai    { color: var(--ai);    background: var(--ai-soft); }
+.proj h3 { font-size: 22px; }
+.proj p { color: var(--fg-dim); font-size: 15px; margin: 0; flex: 1; }
+.proj-stack { display: flex; flex-wrap: wrap; gap: 7px; }
+.proj-stack span { font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-mute); padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; }
+.proj-link { font-family: var(--font-mono); font-size: 13px; color: var(--fg-dim); display: inline-flex; gap: 7px; align-items: center; }
+.proj:hover .proj-link { color: var(--accent); }
+
+/* WIP PROJECTS */
+.proj-wip { opacity: .6; cursor: default; }
+.proj-wip:hover { transform: none; border-color: var(--line); }
+.proj-wip-label { font-family: var(--font-mono); font-size: 12px; color: var(--fg-mute); }
+
+/* STACK */
+.stack-wrap { border: 1px solid var(--line); border-radius: var(--r); background: var(--bg-1); padding: 40px; }
+.stack-group + .stack-group { margin-top: 30px; padding-top: 30px; border-top: 1px solid var(--line); }
+.stack-group h4 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-mute); margin: 0 0 18px; font-weight: 500; }
+.stack-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.tech { display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--bg-2); font-size: 15px; font-weight: 500; transition: transform .18s, border-color .18s; }
+.tech:hover { transform: translateY(-3px); }
+.tech .tg { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--bg-0); }
+.tech.s .tg { background: var(--swift); }
+.tech.s:hover { border-color: var(--swift); }
+.tech.a .tg { background: var(--ai); }
+.tech.a:hover { border-color: var(--ai); }
+
+/* IMÁGENES EN CARDS */
+.featured-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  opacity: 0.85; transition: opacity .3s;
+}
+.featured:hover .featured-img { opacity: 1; }
+.card-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  opacity: 0.82; transition: opacity .3s;
+}
+.card:hover .card-img { opacity: 1; }
+
+/* RSS */
+.rss {
+  border: 1px solid var(--line); border-radius: var(--r);
+  background: radial-gradient(120% 140% at 0% 0%, var(--swift-soft), transparent 55%),
+              radial-gradient(120% 140% at 100% 100%, var(--ai-soft), transparent 55%),
+              var(--bg-1);
+  padding: 56px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap;
+}
+.rss h2 { font-size: clamp(28px, 3.6vw, 44px); text-wrap: balance; }
+.rss p { color: var(--fg-dim); margin: 14px 0 0; max-width: 44ch; }
+.rss-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 26px; border-radius: 12px; font-weight: 600; font-size: 16px; font-family: var(--font-display); border: 1px solid var(--line-2); transition: transform .18s, border-color .18s; }
+.btn svg { width: 18px; height: 18px; }
+.btn.primary { background: linear-gradient(135deg, var(--swift), var(--ai)); color: var(--bg-0); border: 0; }
+.btn:hover { transform: translateY(-3px); }
+.btn.ghost:hover { border-color: var(--fg); color: var(--fg); }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40px; position: relative; z-index: 1; }
+.foot-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.foot-in .mono { color: var(--fg-mute); font-size: 13px; }
+.foot-links { display: flex; gap: 22px; font-family: var(--font-mono); font-size: 13px; }
+.foot-links a { color: var(--fg-dim); }
+.foot-links a:hover { color: var(--accent); }
+
+/* SCROLL REVEAL */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-art { max-width: 380px; }
+  .featured { grid-template-columns: 1fr; }
+  .featured-art { min-height: 240px; }
+  .grid, .now-grid, .proj-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 680px) {
+  .wrap, .nav-in { padding-left: 20px; padding-right: 20px; }
+  .nav-links { gap: 18px; }
+  .grid, .now-grid, .proj-grid { grid-template-columns: 1fr; }
+  .hero { padding-top: 64px; }
+  .sec-head { flex-direction: column; align-items: flex-start; }
+  .rss { padding: 36px 28px; }
+  .featured-body { padding: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none; opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body data-hero="a">
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="/">
+      <span class="brand-mark">S&amp;AI</span>
+      <b>Swift &amp; AI <span>// blog</span></b>
+    </a>
+    <div class="nav-links">
+      <a href="/">Blog</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="/about">Sobre mí</a>
+      <a class="icon" href="https://github.com/ebarquin" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 016 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+      </a>
+      <a class="icon" href="https://www.linkedin.com/in/eugenio-barquin/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33 0-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- HERO -->
+<header class="hero wrap">
+
+  <!-- Variant A: split -->
+  <div class="hero-va">
+    <div class="hero-grid">
+      <div>
+        <span class="kicker">AI Systems Engineer · ex-iOS</span>
+        <h1>Diseño software nativo donde la <span class="hl-ai">IA</span> es una <span class="hl-swift">capacidad</span>, no una dependencia.</h1>
+        <p class="hero-sub">Swift, Core ML y agentes LLM para construir sistemas nativos más rápidos, privados y controlables. Escribo sobre la intersección entre el desarrollo Apple y la IA integrada.</p>
+        <div class="hero-who">
+          <div class="who-avatar"><img src="/autor.png" alt="Eugenio Barquín" width="44" height="44" /></div>
+          <div>Soy <b>Eugenio Barquín</b>. Construyo con Swift, pienso en sistemas de IA.<br />Aquí desgrano arquitectura, agentes y on-device.</div>
         </div>
-    </section>
+        <div class="badges">
+          <span class="badge"><span class="dot" style="background:var(--swift)"></span>Swift</span>
+          <span class="badge"><span class="dot" style="background:var(--ai)"></span>Python</span>
+          <span class="badge"><span class="dot" style="background:var(--ai)"></span>LangGraph</span>
+          <span class="badge"><span class="dot" style="background:var(--swift)"></span>Core ML</span>
+          <span class="badge"><span class="dot" style="background:var(--ai)"></span>FastAPI</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg class="arch-svg" viewBox="0 0 300 315"
+          style="--swift-color: oklch(0.76 0.16 52); --ai-color: oklch(0.80 0.13 205);" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="arch-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="oklch(0.76 0.16 52)"/>
+              <stop offset="100%" stop-color="oklch(0.80 0.13 205)"/>
+            </linearGradient>
+          </defs>
+          <!-- Column labels -->
+          <text x="75" y="22" text-anchor="middle" class="arch-label">Native · Edge</text>
+          <text x="225" y="22" text-anchor="middle" class="arch-label">Agentic · Cloud</text>
 
-    {featuredPosts.length > 0 && (
-        <section class="mb-32">
-            <h2 class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-12 border-b border-gray-100 dark:border-gray-800 pb-2">
-                Últimos artículos
-            </h2>
-            <div class="grid gap-16">
-                {featuredPosts.map(post => (
-                    <a href={post.url} class="group block no-underline text-inherit">
-                        <div class="bg-white dark:bg-[#2c2c2e] border border-gray-100 dark:border-gray-800 p-8 rounded-card shadow-sm group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-500 grid md:grid-cols-2 gap-10 items-center">
-                            {post.frontmatter.image && (
-                                <img
-                                    src={post.frontmatter.image}
-                                    alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                                    width="1536"
-                                    height="1024"
-                                    class="w-full max-h-[220px] object-contain bg-gray-50 dark:bg-[#1c1c1e] rounded-card-inner border border-gray-100 dark:border-gray-800"
-                                />
-                            )}
-                            <div>
-                                <div class="flex items-center gap-3 mb-3">
-                                    <time class="text-sm font-mono text-gray-400">{post.frontmatter.date}</time>
-                                    {post.frontmatter.tags && (
-                                        <div class="flex gap-1.5 flex-wrap">
-                                            {post.frontmatter.tags.map((tag: string) => (
-                                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                                <h3 class="text-2xl font-bold mb-4 group-hover:text-primary transition-colors italic text-gray-900 dark:text-white">
-                                    {post.frontmatter.title}
-                                </h3>
-                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-                                    {post.frontmatter.description}
-                                </p>
-                                <span class="inline-flex items-center text-sm font-bold text-primary uppercase tracking-tighter">
-                                    Leer el post
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-                ))}
-            </div>
-        </section>
-    )}
+          <!-- LEFT COLUMN — Swift -->
+          <!-- SwiftUI -->
+          <rect x="20" y="34" width="110" height="38" rx="9" class="arch-node swift-node"/>
+          <text x="75" y="57" text-anchor="middle" class="arch-text">SwiftUI</text>
+          <!-- edge -->
+          <line x1="75" y1="72" x2="75" y2="88" class="arch-edge swift-edge"/>
+          <polygon points="70,84 75,94 80,84" class="arch-arrow swift-arrow"/>
+          <!-- Core ML -->
+          <rect x="20" y="94" width="110" height="38" rx="9" class="arch-node swift-node"/>
+          <text x="75" y="117" text-anchor="middle" class="arch-text">Core ML</text>
+          <!-- edge -->
+          <line x1="75" y1="132" x2="75" y2="148" class="arch-edge swift-edge"/>
+          <polygon points="70,144 75,154 80,144" class="arch-arrow swift-arrow"/>
+          <!-- Vision -->
+          <rect x="20" y="154" width="110" height="38" rx="9" class="arch-node swift-node"/>
+          <text x="75" y="177" text-anchor="middle" class="arch-text">Vision · MLX</text>
+          <!-- converge line to center -->
+          <path d="M 130 173 Q 150 173 150 210" class="arch-edge swift-edge"/>
 
-    {archivePosts.length > 0 && (
-        <section>
-            <h2 class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-12 border-b border-gray-100 dark:border-gray-800 pb-2">Archivo completo</h2>
-            <div class="grid gap-4">
-                {archivePosts.map(post => (
-                    <a href={post.url} class="group flex flex-col md:flex-row md:items-baseline justify-between gap-4 no-underline">
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white group-hover:text-primary transition-colors no-underline">
-                            {post.frontmatter.title}
-                        </h3>
-                        <div class="flex-grow border-b border-dotted border-gray-200 dark:border-gray-700 mx-4 hidden md:block"></div>
-                        <time class="text-sm font-mono text-gray-400 shrink-0">{post.frontmatter.date}</time>
-                    </a>
-                ))}
+          <!-- RIGHT COLUMN — AI -->
+          <!-- Python -->
+          <rect x="170" y="34" width="110" height="38" rx="9" class="arch-node ai-node"/>
+          <text x="225" y="57" text-anchor="middle" class="arch-text">Python</text>
+          <!-- edge -->
+          <line x1="225" y1="72" x2="225" y2="88" class="arch-edge ai-edge"/>
+          <polygon points="220,84 225,94 230,84" class="arch-arrow ai-arrow"/>
+          <!-- LangGraph -->
+          <rect x="170" y="94" width="110" height="38" rx="9" class="arch-node ai-node"/>
+          <text x="225" y="117" text-anchor="middle" class="arch-text">LangGraph</text>
+          <!-- edge -->
+          <line x1="225" y1="132" x2="225" y2="148" class="arch-edge ai-edge"/>
+          <polygon points="220,144 225,154 230,144" class="arch-arrow ai-arrow"/>
+          <!-- FastAPI / LLMs -->
+          <rect x="170" y="154" width="110" height="38" rx="9" class="arch-node ai-node"/>
+          <text x="225" y="177" text-anchor="middle" class="arch-text">FastAPI · LLMs</text>
+          <!-- converge line to center -->
+          <path d="M 170 173 Q 150 173 150 210" class="arch-edge ai-edge"/>
+
+          <!-- CENTER INTERSECTION NODE -->
+          <circle cx="150" cy="222" r="26" class="arch-center-ring"/>
+          <circle cx="150" cy="222" r="18" class="arch-center"/>
+          <text x="150" y="218" text-anchor="middle" class="arch-center-text">AI</text>
+          <text x="150" y="231" text-anchor="middle" class="arch-center-sub">output</text>
+
+          <!-- bottom line and badge -->
+          <line x1="150" y1="248" x2="150" y2="268" class="arch-edge-center"/>
+          <rect x="86" y="268" width="128" height="30" rx="15" class="arch-badge"/>
+          <circle cx="108" cy="283" r="4" class="arch-badge-dot"/>
+          <text x="150" y="287" text-anchor="middle" class="arch-badge-text">on-device · private</text>
+        </svg>
+        <div class="hero-art-cap"><span>swift ⟷ ai</span><span>on-device · agentic</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variant B: code editor -->
+  <div class="hero-vb">
+    <span class="kicker">AI Systems Engineer · ex-iOS</span>
+    <div class="code-win">
+      <div class="code-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="code-file">Manifesto.swift</span>
+        <span class="code-meta">swift ⟷ ai</span>
+      </div>
+      <div class="code-body">
+        <div class="cl"><span class="ln">01</span><span class="cd"><span class="cmt">// swiftandai.com · Eugenio Barquín</span></span></div>
+        <div class="cl"><span class="ln">02</span><span class="cd"></span></div>
+        <div class="cl"><span class="ln">03</span><span class="cd"><span class="tok-kw">import</span> <span class="tok-type">SwiftUI</span></span></div>
+        <div class="cl"><span class="ln">04</span><span class="cd"><span class="tok-kw">import</span> <span class="tok-type">CoreML</span></span></div>
+        <div class="cl"><span class="ln">05</span><span class="cd"></span></div>
+        <div class="cl"><span class="ln">06</span><span class="cd"><span class="tok-kw">struct</span> <span class="tok-type">NativeApp</span> {</span></div>
+        <div class="cl"><span class="ln">07</span><span class="cd"><span class="tab"></span><h1 class="code-h1"><span class="cmt">/// </span>Diseño software nativo donde la <span class="hl-ai">IA</span> es una <span class="hl-swift">capacidad</span>, no una dependencia.</h1></span></div>
+        <div class="cl"><span class="ln">08</span><span class="cd"><span class="tab"></span><span class="tok-kw">let</span> ai: <span class="tok-type">Capability</span> = <span class="tok-prop">.onDevice</span><span class="cur"></span></span></div>
+        <div class="cl"><span class="ln">09</span><span class="cd">}</span></div>
+      </div>
+    </div>
+    <p class="hero-sub vb-sub">Swift, Core ML y agentes LLM para construir sistemas nativos más rápidos, privados y controlables.</p>
+    <div class="badges vb-badges">
+      <span class="badge"><span class="dot" style="background:var(--swift)"></span>Swift</span>
+      <span class="badge"><span class="dot" style="background:var(--ai)"></span>Python</span>
+      <span class="badge"><span class="dot" style="background:var(--ai)"></span>LangGraph</span>
+      <span class="badge"><span class="dot" style="background:var(--swift)"></span>Core ML</span>
+      <span class="badge"><span class="dot" style="background:var(--ai)"></span>FastAPI</span>
+    </div>
+    <div class="hero-who vb-who">
+      <div class="who-avatar"><img src="/autor.png" alt="Eugenio Barquín" width="44" height="44" /></div>
+      <div>Soy <b>Eugenio Barquín</b>. Construyo con Swift, pienso en sistemas de IA.<br />Aquí desgrano arquitectura, agentes y on-device.</div>
+    </div>
+  </div>
+
+</header>
+
+<!-- FEATURED -->
+{featured && (
+<section class="block wrap" id="articulos">
+  <div class="sec-head reveal">
+    <div>
+      <span class="kicker">Artículo destacado</span>
+      <h2 style="margin-top:14px">Lo último que he publicado</h2>
+    </div>
+    <a class="sec-link" href="#grid">ver todos los artículos →</a>
+  </div>
+  <a class="featured reveal" href={featured.url}>
+    <div class="featured-art">
+      <span class="fbadge">Nuevo</span>
+      {featured.frontmatter.image
+        ? <img src={featured.frontmatter.image} alt={featured.frontmatter.title} class="featured-img" />
+        : <div class={`pat ${getDomain(featured.frontmatter.tags ?? [])}`}></div>
+      }
+    </div>
+    <div class="featured-body">
+      <div class="tagrow">
+        {(featured.frontmatter.tags ?? []).map((tag: string) => (
+          <span class={`tag ${tagClass(tag)}`}>{tag}</span>
+        ))}
+      </div>
+      <h3>{featured.frontmatter.title}</h3>
+      <p>{featured.frontmatter.description}</p>
+      <div class="featured-meta">
+        <span class="mono">{featured.frontmatter.date.replace(/-/g, '·')}</span>
+        <span class="mono">· {readingTime(featured.rawContent())} min</span>
+        <span class="read-cta">Leer el post
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+  </a>
+</section>
+)}
+
+<!-- GRID + FILTERS -->
+{gridPosts.length > 0 && (
+<section class="block wrap" id="grid">
+  <div class="sec-head reveal">
+    <div>
+      <span class="kicker">Todos los artículos</span>
+      <h2 style="margin-top:14px">Archivo</h2>
+    </div>
+    <div class="filters" id="filters">
+      <button class="filter active" data-f="all">Todos</button>
+      <button class="filter" data-f="swift">Swift / iOS</button>
+      <button class="filter" data-f="ai">AI Systems</button>
+    </div>
+  </div>
+  <div class="grid" id="cardGrid">
+    {gridPosts.map((post, i) => {
+      const tags: string[] = post.frontmatter.tags ?? [];
+      const domain = getDomain(tags);
+      return (
+        <a class="card reveal" data-domain={domain} href={post.url}>
+          <div class="card-art">
+              {post.frontmatter.image
+                ? <img src={post.frontmatter.image} alt={post.frontmatter.title} class="card-img" />
+                : <div class={patClass(domain, i)}></div>
+              }
             </div>
-        </section>
-    )}
-</Layout>
+          <div class="card-body">
+            <div class="tagrow">
+              {tags.map((tag: string) => (
+                <span class={`tag ${tagClass(tag)}`}>{tag}</span>
+              ))}
+            </div>
+            <h3>{post.frontmatter.title}</h3>
+            <p>{post.frontmatter.description}</p>
+            <div class="card-meta">
+              <span class="mono">{post.frontmatter.date.replace(/-/g, '·')}</span>
+              <span>· {readingTime(post.rawContent())} min</span>
+            </div>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</section>
+)}
+
+<!-- AHORA MISMO -->
+<section class="block wrap" id="ahora">
+  <div class="sec-head reveal">
+    <div>
+      <span class="kicker">Ahora mismo</span>
+      <h2 style="margin-top:14px">En qué ando estos días</h2>
+      <p class="lead">Una foto honesta de lo que tengo abierto en pestañas, en el editor y en la mesilla.</p>
+    </div>
+    <span class="sec-link mono">// actualizado 2026·05</span>
+  </div>
+  <div class="now-grid">
+    <div class="now-col reveal">
+      <div class="now-head"><span class="pip"></span>Aprendiendo</div>
+      <ul>
+        <li>LangGraph para orquestar agentes multi-step<span>grafos de estado · tools · checkpoints</span></li>
+        <li>MLX e inferencia en Apple Silicon<span>cuantización · memoria unificada</span></li>
+        <li>Evals para sistemas agénticos<span>medir antes de confiar</span></li>
+      </ul>
+    </div>
+    <div class="now-col reveal">
+      <div class="now-head"><span class="pip"></span>Construyendo</div>
+      <ul>
+        <li>ai-agent-playground — sandbox de agentes<span>LangGraph + FastAPI</span></li>
+        <li>Este blog, en público<span>notas que se vuelven posts</span></li>
+      </ul>
+    </div>
+    <div class="now-col reveal">
+      <div class="now-head"><span class="pip"></span>Leyendo</div>
+      <ul>
+        <li>Hands-On Large Language Models<span>Jay Alammar · Ben Ammar</span></li>
+        <li>Aprende Machine Learning con Scikit-Learn, Keras y TensorFlow<span>Aurélien Géron</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS -->
+<section class="block wrap" id="proyectos">
+  <div class="sec-head reveal">
+    <div>
+      <span class="kicker">Proyectos</span>
+      <h2 style="margin-top:14px">Lo que construyo fuera del blog</h2>
+    </div>
+    <a class="sec-link" href="https://github.com/ebarquin" target="_blank" rel="noopener">ver en GitHub →</a>
+  </div>
+  <div class="proj-grid">
+    <a class="proj reveal" href="https://github.com/ebarquin/ai-agent-playground" target="_blank" rel="noopener">
+      <div class="proj-top"><div class="proj-glyph ai">{ }</div><span class="tag ai">AI</span></div>
+      <h3>ai-agent-playground</h3>
+      <p>Sandbox para experimentar con agentes LLM: tools, memoria y grafos de estado, sin fricción para iterar.</p>
+      <div class="proj-stack"><span>Python</span><span>LangGraph</span><span>FastAPI</span></div>
+      <span class="proj-link">repositorio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+    <a class="proj reveal" href="https://github.com/ebarquin/ChatKit" target="_blank" rel="noopener">
+      <div class="proj-top"><div class="proj-glyph swift">CK</div><span class="tag swift">iOS</span></div>
+      <h3>ChatKit</h3>
+      <p>Framework SwiftUI de UI de chat ligero y agnóstico de LLM. Solo renderiza mensajes — sin red, sin lógica conversacional.</p>
+      <div class="proj-stack"><span>Swift</span><span>SwiftUI</span></div>
+      <span class="proj-link">repositorio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+    <a class="proj reveal" href="https://github.com/ebarquin/ConvoKit" target="_blank" rel="noopener">
+      <div class="proj-top"><div class="proj-glyph swift">CV</div><span class="tag swift">iOS</span></div>
+      <h3>ConvoKit</h3>
+      <p>Framework Swift para integrar chat con IA y streaming en tiempo real. Swift 6 strict concurrency, AsyncStream y protocolo de proveedores extensible.</p>
+      <div class="proj-stack"><span>Swift 6</span><span>SwiftUI</span><span>AsyncStream</span></div>
+      <span class="proj-link">repositorio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="block wrap" id="stack">
+  <div class="sec-head reveal">
+    <div>
+      <span class="kicker">Stack · Tecnologías</span>
+      <h2 style="margin-top:14px">Las herramientas con las que trabajo</h2>
+    </div>
+    <span class="sec-link mono">// nativo + agéntico</span>
+  </div>
+  <div class="stack-wrap reveal">
+    <div class="stack-group">
+      <h4>Nativo Apple</h4>
+      <div class="stack-row">
+        <span class="tech s"><span class="tg">Sw</span>Swift</span>
+        <span class="tech s"><span class="tg">UI</span>SwiftUI</span>
+        <span class="tech s"><span class="tg">ML</span>Core ML</span>
+        <span class="tech s"><span class="tg">Vi</span>Vision</span>
+        <span class="tech s"><span class="tg">Mx</span>MLX</span>
+      </div>
+    </div>
+    <div class="stack-group">
+      <h4>Sistemas de IA</h4>
+      <div class="stack-row">
+        <span class="tech a"><span class="tg">Py</span>Python</span>
+        <span class="tech a"><span class="tg">Lg</span>LangGraph</span>
+        <span class="tech a"><span class="tg">Fa</span>FastAPI</span>
+        <span class="tech a"><span class="tg">Ll</span>LLMs</span>
+        <span class="tech a"><span class="tg">Ev</span>Evals</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RSS -->
+<section class="block wrap" id="rss">
+  <div class="rss reveal">
+    <div>
+      <span class="kicker">Sigue el blog</span>
+      <h2 style="margin-top:14px">Sin algoritmos. Solo el feed.</h2>
+      <p>Suscríbete por RSS y recibe cada post sobre Swift, on-device y agentes LLM en tu lector, cuando salga.</p>
+    </div>
+    <div class="rss-actions">
+      <a class="btn primary" href="/rss.xml">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 11a9 9 0 019 9h2.5A11.5 11.5 0 004 8.5V11zm0 5a3 3 0 013 3h2.5A5.5 5.5 0 004 13.5V16zm1.5 3.5A1.5 1.5 0 104.5 18 1.5 1.5 0 005.5 19.5zM4 5a15 15 0 0115 15h2.5A17.5 17.5 0 004 2.5V5z"/></svg>
+        Suscribirse por RSS
+      </a>
+      <a class="btn ghost" href="/rss.xml">Ver el feed</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span class="mono">© 2026 // SWIFT &amp; AI — Building with Swift. Thinking about AI.</span>
+    <div class="foot-links">
+      <a href="/rss.xml">RSS</a>
+      <a href="https://github.com/ebarquin" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/eugenio-barquin/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="/about">Sobre mí</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+(function () {
+  var filtersEl = document.getElementById('filters');
+  var grid = document.getElementById('cardGrid');
+  if (filtersEl && grid) {
+    filtersEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('.filter');
+      if (!btn) return;
+      var f = btn.dataset.f;
+      filtersEl.querySelectorAll('.filter').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      grid.querySelectorAll('.card').forEach(function (card) {
+        var d = card.dataset.domain;
+        var show = f === 'all' || d === f || d === 'both';
+        card.classList.toggle('hide', !show);
+      });
+    });
+  }
+
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    reveals.forEach(function (el, i) {
+      el.style.transitionDelay = (Math.min(i % 3, 2) * 70) + 'ms';
+      io.observe(el);
+    });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+  }
+
+})();
+</script>
+
+</body>
+</html>
