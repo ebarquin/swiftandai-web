@@ -37,6 +37,10 @@ function tagClass(tag: string): string {
     if (['swift','swiftui','ios','core ml'].includes(t)) return 'swift';
     return '';
 }
+
+function visibleTags(tags: string[]): string[] {
+    return tags.slice(0, 3);
+}
 ---
 
 <!DOCTYPE html>
@@ -602,7 +606,7 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40
     </div>
     <div class="featured-body">
       <div class="tagrow">
-        {(featured.frontmatter.tags ?? []).map((tag: string) => (
+        {visibleTags(featured.frontmatter.tags ?? []).map((tag: string) => (
           <span class={`tag ${tagClass(tag)}`}>{tag}</span>
         ))}
       </div>
@@ -648,7 +652,7 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40
             </div>
           <div class="card-body">
             <div class="tagrow">
-              {tags.map((tag: string) => (
+              {visibleTags(tags).map((tag: string) => (
                 <span class={`tag ${tagClass(tag)}`}>{tag}</span>
               ))}
             </div>
