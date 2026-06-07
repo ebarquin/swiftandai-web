@@ -6,6 +6,18 @@ const sorted = posts.sort((a, b) =>
 
 const featured = sorted[0];
 const gridPosts = sorted.slice(1);
+const archiveTags = Array.from(new Set(
+    gridPosts.flatMap((post) => post.frontmatter.tags ?? [])
+));
+
+function tagSlug(tag: string): string {
+    return tag
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+}
 
 function getDomain(tags: string[]): string {
     const t = tags.map(s => s.toLowerCase());
@@ -36,10 +48,6 @@ function tagClass(tag: string): string {
     if (['ia','agentes llm','python','langgraph','rag','nlp','fastapi'].includes(t)) return 'ai';
     if (['swift','swiftui','ios','core ml'].includes(t)) return 'swift';
     return '';
-}
-
-function visibleTags(tags: string[]): string[] {
-    return tags.slice(0, 3);
 }
 ---
 
@@ -308,8 +316,8 @@ section.block { padding: 72px 0; position: relative; z-index: 1; }
 }
 .filter:hover { color: var(--fg); }
 .filter.active { color: var(--bg-0); background: var(--fg); border-color: var(--fg); }
-.filter[data-f="swift"].active { background: var(--swift); border-color: var(--swift); }
-.filter[data-f="ai"].active    { background: var(--ai);    border-color: var(--ai); }
+.filter.swift.active { background: var(--swift); border-color: var(--swift); }
+.filter.ai.active    { background: var(--ai);    border-color: var(--ai); }
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .card {
   border: 1px solid var(--line); border-radius: var(--r); overflow: hidden;
@@ -606,7 +614,7 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40
     </div>
     <div class="featured-body">
       <div class="tagrow">
-        {visibleTags(featured.frontmatter.tags ?? []).map((tag: string) => (
+        {(featured.frontmatter.tags ?? []).map((tag: string) => (
           <span class={`tag ${tagClass(tag)}`}>{tag}</span>
         ))}
       </div>
@@ -634,8 +642,9 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40
     </div>
     <div class="filters" id="filters">
       <button class="filter active" data-f="all">Todos</button>
-      <button class="filter" data-f="swift">Swift / iOS</button>
-      <button class="filter" data-f="ai">AI Systems</button>
+      {archiveTags.map((tag: string) => (
+        <button class={`filter ${tagClass(tag)}`} data-f={tagSlug(tag)}>{tag}</button>
+      ))}
     </div>
   </div>
   <div class="grid" id="cardGrid">
@@ -643,7 +652,7 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40
       const tags: string[] = post.frontmatter.tags ?? [];
       const domain = getDomain(tags);
       return (
-        <a class="card reveal" data-domain={domain} href={post.url}>
+        <a class="card reveal" data-domain={domain} data-tags={tags.map(tagSlug).join(' ')} href={post.url}>
           <div class="card-art">
               {post.frontmatter.image
                 ? <img src={post.frontmatter.image} alt={post.frontmatter.title} class="card-img" />
@@ -652,7 +661,7 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40
             </div>
           <div class="card-body">
             <div class="tagrow">
-              {visibleTags(tags).map((tag: string) => (
+              {tags.map((tag: string) => (
                 <span class={`tag ${tagClass(tag)}`}>{tag}</span>
               ))}
             </div>
@@ -817,8 +826,8 @@ footer { border-top: 1px solid var(--line); padding: 40px 0 60px; margin-top: 40
       var f = btn.dataset.f;
       filtersEl.querySelectorAll('.filter').forEach(function (b) { b.classList.toggle('active', b === btn); });
       grid.querySelectorAll('.card').forEach(function (card) {
-        var d = card.dataset.domain;
-        var show = f === 'all' || d === f || d === 'both';
+        var tags = (card.dataset.tags || '').split(' ');
+        var show = f === 'all' || tags.indexOf(f) !== -1;
         card.classList.toggle('hide', !show);
       });
     });
